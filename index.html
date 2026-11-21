@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little Cozy Kitchen</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+:root{--ink:#684d3d;--cream:#fff8e9;--peach:#ffd8c5;--mint:#d8eee0;--blue:#dcecf7;--pink:#f6cbd0;--brown:#9b7357;--gold:#f3c96a}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:'Baloo 2',system-ui,sans-serif;background:linear-gradient(#f8e9d6 0 30%,#f5dfc9 30% 100%);min-height:100vh}
+button{font:inherit;color:inherit;border:2px solid var(--ink);background:var(--cream);border-radius:14px;padding:8px 14px;box-shadow:0 3px 0 #b99a80;cursor:pointer;transition:.15s}button:hover{transform:translateY(-2px) scale(1.03)}button:active{transform:translateY(2px);box-shadow:none}button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.topbar{max-width:1050px;margin:12px auto 0;padding:10px 16px;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;background:#fff7e8dd;border:2px solid #b99a80;border-radius:18px;box-shadow:0 4px 0 #c5a68c}
+.brand{font-size:1.3rem;font-weight:800}.stats{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#fff;border:1.5px solid #c6a58b;border-radius:999px;padding:5px 12px;font-weight:700}
+.game{max-width:1050px;margin:14px auto;padding:0 12px 24px}.shop-sign{text-align:center;font-size:clamp(1.6rem,5vw,2.6rem);font-weight:800;text-shadow:2px 2px #fff;margin:8px 0}.subtitle{text-align:center;margin-top:-12px}
+.scene{background:repeating-linear-gradient(0deg,#f3dfc9 0 28px,#e9d2b9 29px 31px);border:3px solid #9e795d;border-radius:24px;padding:14px;box-shadow:0 7px 0 #b28d70;position:relative;overflow:hidden}
+.scene:before{content:'✦  ✧  ✦  ✧  ✦';position:absolute;right:18px;top:8px;color:#fff5d2;letter-spacing:14px;opacity:.8;pointer-events:none}
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}.tabs button.active{background:var(--gold);transform:translateY(-2px)}
+.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,.8fr);gap:12px}
+.panel{background:#fff8e9eF;border:2px solid #a98263;border-radius:18px;padding:12px;box-shadow:0 4px 0 #c9a98e;min-width:0}
+.panel h2{margin:0 0 8px;font-size:1.25rem}.shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.ingredient{background:#fdf1dc;border:2px solid #c6a58b;border-radius:16px;padding:8px 4px;text-align:center;cursor:pointer;min-width:0;transition:.15s}
+.ingredient:hover{transform:rotate(-2deg) scale(1.04);background:#fff}
+.emoji{font-size:2rem;display:block}.ingredient strong{display:block;font-size:.95rem}.ingredient small{display:block;color:#8a6d55}
+.ingredient.selected{outline:3px solid #e8b75f;background:#fff1c9}
+.actions{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:12px}
+.customer{display:flex;align-items:center;gap:10px;background:#fce4e1;border-radius:16px;padding:10px;margin-bottom:8px}
+.pet{font-size:3rem;filter:drop-shadow(1px 2px #d9b6a1);animation:bob 2s infinite ease-in-out}
+@keyframes bob{50%{transform:translateY(-4px)}}.bubble{background:white;border:1.5px solid #c6a58b;border-radius:14px;padding:7px 10px;flex:1;line-height:1.25}.bubble b{display:block}
+.recipe{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed #d5b99e}.recipe:last-child{border:0}
+.worktop{min-height:190px;background:linear-gradient(#d5eee5,#c4dfd5);border:2px solid #9caa8c;border-radius:18px;padding:12px;text-align:center}
+.dish{min-height:90px;width:min(100%,300px);margin:8px auto;background:#fffdf5;border:7px solid #e9d9c4;border-radius:50%;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;padding:12px;box-shadow:inset 0 0 0 2px #c9ad8e}
+.dish span{font-size:1.7rem}.empty{color:#b49b81;font-size:.9rem}
+.method{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:10px 0}
+.meter{height:16px;background:#e7cdb6;border:2px solid #9b7659;border-radius:99px;overflow:hidden;margin:8px auto;max-width:320px}.meter>div{height:100%;width:0;background:linear-gradient(90deg,#9ed9a9,#f2d16d,#e98a6e);transition:width .1s}
+.hint{font-size:.9rem;text-align:center;color:#80654f;min-height:24px}
+.hidden{display:none!important}.footer{text-align:center;font-size:.85rem;margin-top:12px;color:#8c7058}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#684d3d;color:white;padding:9px 16px;border-radius:99px;box-shadow:0 4px 12px #0002;z-index:9;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1}
+.modal{position:fixed;inset:0;background:#513b2dcc;display:grid;place-items:center;padding:16px;z-index:10}.modal-card{background:var(--cream);border:3px solid var(--ink);border-radius:24px;padding:22px;max-width:420px;width:100%;text-align:center;box-shadow:0 7px 0 #b28d70}
+@media(max-width:700px){.layout{grid-template-columns:1fr}.shelf{grid-template-columns:repeat(4,minmax(0,1fr))}.topbar{margin:8px}.game{padding:0 8px 20px}.panel{padding:10px}}
+@media(max-width:380px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{font-size:.85rem}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">🐰 Little Cozy Kitchen</div>
+  <div class="stats"><span class="pill" id="clock">🕘 08:00</span><span class="pill" id="day">📅 Hari 1</span><span class="pill" id="money">🪙 $30</span><span class="pill" id="level">⭐ Lv. 1</span></div>
+  <div><button id="soundBtn" title="Suara">🔊</button> <button id="resetBtn" title="Mulai ulang">↻</button></div>
+</header>
+<main class="game">
+  <h1 class="shop-sign">🍞 Bunny & Bear Bakery 🍰</h1>
+  <div class="subtitle">Toko kecil yang hangat, dibuat dengan cinta ♡</div>
+  <nav class="tabs">
+    <button class="active" data-tab="market">🧺 Bahan</button><button data-tab="cook">🍳 Memasak</button><button data-tab="serve">🍽️ Sajikan</button><button data-tab="recipes">📖 Recipes</button>
+  </nav>
+  <section class="scene">
+    <div class="layout">
+      <div class="panel">
+        <section id="market" class="tabpage">
+          <h2>🧺 Pasar bahan-bahan</h2>
+          <p style="margin:0 0 8px">Pilih bahan untuk dibeli. Bahan yang sudah kamu punya bisa dipakai berkali-kali untuk sesi ini.</p>
+          <div class="shelf" id="shelf"></div>
+          <div class="actions"><button id="prevShelf">◀</button><span id="shelfPage">Rak 1 / 2</span><button id="nextShelf">▶</button><button id="goCook">Ke meja masak →</button></div>
+        </section>
+        <section id="cook" class="tabpage hidden">
+          <h2>🍳 Dapur mungil</h2>
+          <div class="worktop">
+            <div>🧑‍🍳 <b>Koki Momo:</b> “Masukkan bahan ke piring, lalu pilih cara masaknya!”</div>
+            <div class="dish" id="cookDish"><span class="empty">Piring masih kosong…</span></div>
+            <div class="hint" id="cookHint">Bahan yang dibeli akan muncul di sini.</div>
+          </div>
+          <div class="method">
+            <button data-method="Panggang">🔥 Panggang</button><button data-method="Goreng">🍳 Goreng</button><button data-method="Rebus">🥣 Rebus</button><button data-method="Kukus">♨️ Kukus</button>
+          </div>
+          <div class="meter"><div id="heatBar"></div></div>
+          <div class="hint" id="heatHint">Pilih metode, lalu tekan “Mulai mini-game”.</div>
+          <div class="actions"><button id="startCook">▶ Mulai mini-game</button><button id="clearDish">Kosongkan piring</button><button id="toServe">Ke penyajian →</button></div>
+        </section>
+        <section id="serve" class="tabpage hidden">
+          <h2>🍽️ Hias dan sajikan</h2>
+          <div class="worktop">
+            <div class="dish" id="serveDish"><span class="empty">Hidanganmu akan tampil di sini</span></div>
+            <div class="hint" id="serveHint">Tambahkan saus atau topping, lalu sajikan.</div>
+          </div>
+          <div class="method"><button data-topping="🍯">🍯 Madu</button><button data-topping="🥛">🥛 Susu</button><button data-topping="🍅">🍅 Saus</button><button data-topping="🌿">🌿 Herbal</button></div>
+          <div class="actions"><button id="complete">✨ Complete!</button></div>
+        </section>
+        <section id="recipes" class="tabpage hidden">
+          <h2>📖 Buku resep Momo</h2><p>Resep akan terbuka saat kamu berhasil membuatnya.</p><div id="recipeBook"></div>
+        </section>
+      </div>
+      <aside class="panel">
+        <h2>🐾 Guest hari ini</h2>
+        <div class="customer"><div class="pet" id="guestPet">🐱</div><div class="bubble"><b id="guestName">Mimi si Kucing</b><span id="guestMood">“Aku lapar sekali!”</span><div>Pesanan: <span id="orderIcon">🍞🥚</span></div></div></div>
+        <h2>💌 Catatan koki</h2><div class="bubble" id="chefNote">“Hai! Yuk buat sarapan enak untuk pelanggan pertama kita!”</div>
+        <h2 style="margin-top:14px">📦 Keranjangmu</h2><div id="inventory">Belum ada bahan.</div>
+        <div class="recipe" style="margin-top:12px"><span>💰 Total tip</span><b id="tips">$0</b></div>
+        <div class="recipe"><span>🍰 Hidangan dibuat</span><b id="servedCount">0</b></div>
+      </aside>
+    </div>
+  </section>
+  <div class="footer">Dibuat dengan gula, mentega, dan sedikit keajaiban ✨ · Progres tersimpan otomatis di perangkatmu</div>
+</main>
+<div class="toast" id="toast"></div>
+<div class="modal hidden" id="resultModal"><div class="modal-card"><div style="font-size:3rem" id="resultFace">🐰</div><h2 id="resultTitle">Yay!</h2><p id="resultText"></p><button id="nextGuest">Pelanggan berikutnya →</button></div></div>
+<script>
+// DATA GAME: mudah ditambah atau diubah
+const ingredients=[
+ {id:'beef',name:'Daging sapi',icon:'🥩',price:8,cat:'Daging'},{id:'chicken',name:'Ayam',icon:'🍗',price:6,cat:'Daging'},
+ {id:'bacon',name:'Bacon',icon:'🥓',price:7,cat:'Daging'},{id:'mince',name:'Daging giling',icon:'🍖',price:6,cat:'Daging'},
+ {id:'shrimp',name:'Udang',icon:'🍤',price:8,cat:'Seafood'},{id:'fish',name:'Ikan',icon:'🐟',price:7,cat:'Seafood'},
+ {id:'pumpkin',name:'Labu',icon:'🎃',price:4,cat:'Sayur'},{id:'cucumber',name:'Timun',icon:'🥒',price:3,cat:'Sayur'},
+ {id:'scallion',name:'Daun bawang',icon:'🌿',price:2,cat:'Sayur'},{id:'egg',name:'Telur',icon:'🥚',price:3,cat:'Lainnya'},
+ {id:'milk',name:'Susu',icon:'🥛',price:3,cat:'Lainnya'},{id:'honey',name:'Madu',icon:'🍯',price:4,cat:'Lainnya'},
+ {id:'bread',name:'Roti',icon:'🍞',price:3,cat:'Lainnya'},{id:'flour',name:'Tepung',icon:'🌾',price:2,cat:'Lainnya'}
+];
+const recipes=[
+ {name:'Roti Telur Ceria',items:['bread','egg'],icon:'🍳',desc:'Sarapan hangat dan sederhana.'},
+ {name:'Sup Labu Lembut',items:['pumpkin','milk'],icon:'🥣',desc:'Sup manis dan creamy.'},
+ {name:'Ayam Panggang',items:['chicken','scallion'],icon:'🍗',desc:'Ayam gurih dengan herbal.'}
+];
+const guests=[{name:'Mimi si Kucing',pet:'🐱',order:['bread','egg'],mood:'“Miaw! Aku mau sarapan!”'},
+{name:'Bubu si Beruang',pet:'🐻',order:['pumpkin','milk'],mood:'“Perutku keroncongan…”'},
+{name:'Lulu si Kelinci',pet:'🐰',order:['chicken','scallion'],mood:'“Aku suka makanan hangat!”'},
+{name:'Pipi si Panda',pet:'🐼',order:['fish','cucumber'],mood:'“Ada menu spesial hari ini?”'}];
+const $=id=>document.getElementById(id);
+let state={money:30,level:1,day:1,minute:480,inventory:{},dish:[],toppings:[],method:'',cooked:false,heat:0,tips:0,served:0,guest:0,unlocked:[],muted:false};
+let shelfPage=0, cookTimer=null, audioCtx=null;
+function save(){localStorage.setItem('cozyKitchenSave',JSON.stringify(state))}
+function load(){try{const s=JSON.parse(localStorage.getItem('cozyKitchenSave'));if(s)state={...state,...s}}catch(e){}}
+function sound(freq=520,duration=.08){if(state.muted)return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.07,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);o.start();o.stop(audioCtx.currentTime+duration)}catch(e){}}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1800)}
+function updateStats(){$('money').textContent='🪙 $'+state.money;$('level').textContent='⭐ Lv. '+state.level;$('day').textContent='📅 Hari '+state.day;$('clock').textContent='🕘 '+String(Math.floor(state.minute/60)%24).padStart(2,'0')+':'+String(state.minute%60).padStart(2,'0');$('tips').textContent='$'+state.tips;$('servedCount').textContent=state.served;let inv=Object.entries(state.inventory).filter(([k,v])=>v>0);$('inventory').innerHTML=inv.length?inv.map(([id,n])=>{let x=ingredients.find(a=>a.id===id);return `<div class="recipe"><span>${x.icon} ${x.name}</span><b>×${n}</b></div>`}).join(''):'Belum ada bahan.'}
+function renderShelf(){let list=ingredients.slice(shelfPage*8,shelfPage*8+8);$('shelf').innerHTML=list.map(x=>`<div class="ingredient" data-buy="${x.id}"><span class="emoji">${x.icon}</span><strong>${x.name}</strong><small>$${x.price} · ${x.cat}</small></div>`).join('');$('shelfPage').textContent=`Rak ${shelfPage+1} / 2`;document.querySelectorAll('[data-buy]').forEach(el=>el.onclick=()=>buy(el.dataset.buy))}
+function buy(id){let x=ingredients.find(a=>a.id===id);if(state.money<x.price){toast('Uangmu belum cukup 🥺');sound(180);return}state.money-=x.price;state.inventory[id]=(state.inventory[id]||0)+1;updateStats();save();sound(650);toast(`${x.icon} ${x.name} masuk keranjang!`)}
+function renderDish(){let html=state.dish.length?state.dish.map(id=>`<span>${ingredients.find(x=>x.id===id)?.icon||'🍲'}</span>`).join(''):'<span class="empty">Piring masih kosong…</span>';$('cookDish').innerHTML=html;$('serveDish').innerHTML=state.dish.length?html+state.toppings.map(x=>`<span>${x}</span>`).join(''):'<span class="empty">Hidanganmu akan tampil di sini</span>'}
+function addToDish(id){if(!state.inventory[id]){toast('Beli bahan ini dulu di pasar!');return}state.inventory[id]--;state.dish.push(id);state.cooked=false;renderDish();updateStats();save();sound(600);$('cookHint').textContent='Bahan ditambahkan! Tambahkan bahan lain atau mulai memasak.'}
+function setTab(tab){document.querySelectorAll('.tabpage').forEach(x=>x.classList.add('hidden'));$(tab).classList.remove('hidden');document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));if(tab==='recipes')renderRecipes();if(tab==='cook'||tab==='serve')renderDish()}
+function renderRecipes(){$('recipeBook').innerHTML=recipes.map(r=>`<div class="recipe"><span>${state.unlocked.includes(r.name)?r.icon:'🔒'} ${state.unlocked.includes(r.name)?r.name:'Resep rahasia'}</span><small>${state.unlocked.includes(r.name)?r.desc:'Belum ditemukan'}</small></div>`).join('')}
+function setGuest(){let g=guests[state.guest%guests.length];$('guestPet').textContent=g.pet;$('guestName').textContent=g.name;$('guestMood').textContent=g.mood;$('orderIcon').textContent=g.order.map(id=>ingredients.find(x=>x.id===id).icon).join(' ')}
+function cookStart(){if(!state.dish.length){toast('Masukkan bahan dulu!');return}if(!state.method){toast('Pilih metode memasak dulu!');return}if(cookTimer)return;state.heat=0;$('heatBar').style.width='0%';$('heatHint').textContent='Tap tombol STOP saat bar berada di zona hijau!';$('startCook').textContent='⏹ STOP!';cookTimer=setInterval(()=>{state.heat=(state.heat+3.3)%110;$('heatBar').style.width=Math.min(state.heat,100)+'%';if(state.heat>=100){clearInterval(cookTimer);cookTimer=null;state.heat=100;$('heatHint').textContent='Ups! Sedikit gosong… tekan STOP lebih awal lain kali.';$('startCook').textContent='▶ Coba lagi';state.cooked=false}},90)}
+function cookStop(){if(!cookTimer)return;clearInterval(cookTimer);cookTimer=null;let score=Math.max(0,100-Math.abs(state.heat-62)*2);state.cooked=score>=65;$('startCook').textContent='▶ Mulai mini-game';$('heatHint').textContent=score>=80?'Sempurna! Matangnya pas ✨':score>=65?'Lumayan matang!':'Kurang pas, coba lagi ya.';$('cookHint').textContent=state.cooked?'Momo: “Wah, harum sekali!”':'Momo: “Belum matang sempurna, coba masak lagi.”';sound(score>=65?850:220);save()}
+function complete(){if(!state.dish.length){toast('Piringmu masih kosong!');return}if(!state.cooked){toast('Masak dulu sampai matang ya!');return}let g=guests[state.guest%guests.length],match=g.order.every(id=>state.dish.includes(id));let exact=match&&state.dish.length===g.order.length;let stars=exact?3:match?2:1;let pay=exact?18:match?12:7;let tip=stars*2;state.money+=pay+tip;state.tips+=tip;state.served++;state.minute+=35;if(state.minute>=1200){state.day++;state.minute=480}state.level=1+Math.floor(state.money/70);let found=recipes.find(r=>r.items.length===state.dish.length&&r.items.every(id=>state.dish.includes(id)));if(found&&!state.unlocked.includes(found.name)){state.unlocked.push(found.name);$('chefNote').textContent=`“Resep baru ditemukan: ${found.name}! 📖”`}else $('chefNote').textContent=stars===3?'“Bintang tiga! Kamu hebat sekali!”':'“Terima kasih sudah memasak! Terus berlatih ya!”';$('resultFace').textContent=stars===3?'🥳':stars===2?'😊':'🙂';$('resultTitle').textContent=''.padStart(stars,'⭐')+' Selesai!';$('resultText').textContent=`${g.name} menerima hidanganmu. ${stars} bintang · Bayaran $${pay} + tip $${tip}. ${exact?'Pesanannya cocok sekali!':'Terus coba resep baru untuk mendapat bintang lebih banyak.'}`;$('resultModal').classList.remove('hidden');sound(900,.2);state.dish=[];state.toppings=[];state.cooked=false;updateStats();renderDish();save()}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+$('prevShelf').onclick=()=>{shelfPage=Math.max(0,shelfPage-1);renderShelf()};$('nextShelf').onclick=()=>{shelfPage=Math.min(1,shelfPage+1);renderShelf()};
+$('goCook').onclick=()=>setTab('cook');$('toServe').onclick=()=>setTab('serve');
+$('clearDish').onclick=()=>{state.dish.forEach(id=>state.inventory[id]=(state.inventory[id]||0)+1);state.dish=[];state.cooked=false;renderDish();updateStats();save();toast('Bahan dikembalikan ke keranjang')};
+document.querySelectorAll('[data-method]').forEach(b=>b.onclick=()=>{state.method=b.dataset.method;document.querySelectorAll('[data-method]').forEach(x=>x.style.background=x===b?'#f3c96a':'');$('cookHint').textContent='Metode dipilih: '+state.method});
+$('startCook').onclick=()=>cookTimer?cookStop():cookStart();
+document.querySelectorAll('[data-topping]').forEach(b=>b.onclick=()=>{if(!state.dish.length){toast('Buat hidangan dulu!');return}state.toppings.push(b.dataset.topping);renderDish();sound(700);});
+$('complete').onclick=complete;
+$('nextGuest').onclick=()=>{$('resultModal').classList.add('hidden');state.guest++;state.method='';setGuest();setTab('market');save();$('chefNote').textContent='“Pelanggan baru datang! Yuk masak lagi!”'};
+$('soundBtn').onclick=()=>{state.muted=!state.muted;$('soundBtn').textContent=state.muted?'🔇':'🔊';save();if(!state.muted)sound()};
+$('resetBtn').onclick=()=>{if(confirm('Mulai ulang dari awal? Progres tersimpan akan dihapus.')){localStorage.removeItem('cozyKitchenSave');location.reload()}};
+$('shelf').addEventListener('dblclick',e=>{let el=e.target.closest('[data-buy]');if(el)buy(el.dataset.buy)});
+$('shelf').addEventListener('contextmenu',e=>{e.preventDefault();let el=e.target.closest('[data-buy]');if(el)addToDish(el.dataset.buy)});
+load();renderShelf();setGuest();updateStats();renderDish();renderRecipes();
+// Ketuk bahan di keranjang (panel kanan) untuk memasukkannya ke piring.
+$('inventory').addEventListener('click',e=>{let row=e.target.closest('.recipe');if(!row)return;let name=row.querySelector('span')?.textContent||'';let item=ingredients.find(x=>name.includes(x.name));if(item)addToDish(item.id)});
+</script>
+</body>
+</html>
